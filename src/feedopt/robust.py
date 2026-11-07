@@ -65,8 +65,13 @@ class ChanceResult:
 
 
 def formulate_chance(nm: pd.DataFrame, prices: pd.Series, requirements: pd.DataFrame,
-                     limits: pd.DataFrame | None, sd: pd.DataFrame, alpha: float = 0.95) -> ChanceResult:
-    """Least-cost recipe that meets every requirement individually with probability alpha."""
+                     limits: pd.DataFrame | None, sd: pd.DataFrame, alpha: float = 0.95,
+                     availability_cap: dict[str, float] | None = None,
+                     extra_max_groups: dict[str, tuple[list[str], float]] | None = None) -> ChanceResult:
+    """Least-cost recipe that meets every requirement individually with probability alpha.
+
+    availability_cap and extra_max_groups work as in model.formulate (% as fed).
+    """
     if not 0.5 <= alpha < 1:
         raise ValueError("alpha must be in [0.5, 1)")
     z = NormalDist().inv_cdf(alpha)
@@ -84,7 +89,15 @@ def formulate_chance(nm: pd.DataFrame, prices: pd.Series, requirements: pd.DataF
         for k, ing in enumerate(ings):
             if ing in limits.index:
                 cons += [x[k] >= limits.at[ing, "min_pct"] / 100, x[k] <= limits.at[ing, "max_pct"] / 100]
-    prob = cp.Problem(cp.Minimize(prices.loc[ings].to_numpy() @ x), cons)
+    pos = {ing: k for k, ing in enumerate(ings)}
+    for ing, cap in (availability_cap or {}).items():
+        if ing in pos:
+            cons.append(x[pos[ing]] <= cap / 100)
+    for members, cap in (extra_max_groups or {}).values():
+        idx = [pos[m] for m in members if m in pos]
+        if idx:
+            cons.append(cp.sum(x[idx]) <= cap / 100)
+    prob =cp.Problem(cp.Minimize(prices.loc[ings].to_numpy() @ x), cons)
     prob.solve(solver=cp.CLARABEL)
     if prob.status != "optimal":
         empty = pd.Series(dtype=float)

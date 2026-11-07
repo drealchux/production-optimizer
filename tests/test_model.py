@@ -134,3 +134,14 @@ def test_chance_cost_rises_and_reliability_holds(setup, chance_setup):
     assert c99.recipe.sum() == pytest.approx(100, abs=1e-6)
     # every requirement should pass in close to 99% of simulated batches
     assert validate(c99.recipe, raw, var, req, n=4000, seed=3)["weakest_pass_pct"] > 97.5
+
+
+def test_chance_respects_marine_and_stock_caps(setup, chance_setup):
+    from feedopt.robust import formulate_chance
+    nm, prices, req, limits = setup
+    r = formulate_chance(nm, prices, req, limits, chance_setup[2], alpha=0.95,
+                         availability_cap={"fish_oil": 2.0},
+                         extra_max_groups={"marine": (["fish_meal", "fish_oil"], 12.0)})
+    assert r.feasible
+    assert r.recipe["fish_oil"] <= 2.0 + 1e-4
+    assert r.recipe[["fish_meal", "fish_oil"]].sum() <= 12.0 + 1e-4
