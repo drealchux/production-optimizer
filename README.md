@@ -119,12 +119,69 @@ Every value is tagged **sourced**, **derived** or **assumed** in `data/raw/`. De
 
 ## Run it
 
+Run every command from the project root (the folder with `pyproject.toml`), not from inside `app/`.
+
+### Option 1: uv (recommended)
+
+[uv](https://docs.astral.sh/uv/) creates the virtual environment and installs the pinned dependencies from `uv.lock` automatically.
+
 ```bash
-pip install -r requirements.txt
-python scripts/run_all.py            # writes tables, charts and summary.md to outputs/
-pytest -q                            # 9 tests: unit conversion, feasibility, limits, monotonicity, caps
-streamlit run app/streamlit_app.py   # interactive formulator
+uv sync                                     # first time only
+uv run python scripts/run_all.py            # writes tables, charts and summary.md to outputs/
+uv run pytest -q                            # 9 tests: unit conversion, feasibility, limits, monotonicity, caps
+uv run streamlit run app/streamlit_app.py   # interactive formulator
 ```
+
+### Option 2: pip and a virtual environment
+
+macOS / Linux:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python scripts/run_all.py
+pytest -q
+streamlit run app/streamlit_app.py
+```
+
+Windows (PowerShell):
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+python scripts/run_all.py
+pytest -q
+streamlit run app/streamlit_app.py
+```
+
+If PowerShell refuses to run `Activate.ps1`, either allow local scripts once with `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`, or skip activation and call the venv directly:
+
+```powershell
+.\.venv\Scripts\python.exe scripts/run_all.py
+.\.venv\Scripts\streamlit.exe run app/streamlit_app.py
+```
+
+### Option 3: without activating, via `python -m`
+
+Works with any interpreter that has the dependencies installed:
+
+```bash
+python -m streamlit run app/streamlit_app.py
+python -m pytest -q
+```
+
+The app opens at http://localhost:8501. Stop it with `Ctrl+C`.
+
+### Troubleshooting
+
+| Symptom | Cause and fix |
+|---|---|
+| `ModuleNotFoundError: No module named 'pulp'` (or `streamlit`) | You are using a Python that doesn't have the dependencies, usually the system one. Use `uv run ...` or activate `.venv` first. |
+| `python app/streamlit_app.py` prints warnings and no app opens | Streamlit apps must be started with `streamlit run`, not `python`. |
+| `run : The term 'run' is not recognized` | The command is `streamlit run`, not `run`. |
+| `File does not exist: app/streamlit_app.py` | You are inside `app/`. Go back to the project root, or run `streamlit run streamlit_app.py` from there. |
 
 ## Project structure
 
