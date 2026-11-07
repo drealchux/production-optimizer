@@ -78,3 +78,29 @@ def test_impossible_requirement_is_infeasible(setup):
     r2 = req.copy()
     r2.loc[r2["nutrient"] == "crude_protein", "value"] = 90
     assert not formulate(nm, prices, r2, limits).feasible
+
+
+def test_zero_variability_reproduces_optimizer(setup):
+    from feedopt.uncertainty import load_variability, simulate_profiles
+    nm, prices, req, limits = setup
+    r = formulate(nm, prices, req, limits)
+    var = load_variability().assign(sd=0.0)
+    prof = simulate_profiles(r.recipe, load_raw_ingredients(), var, n=5)
+    diff = (prof - r.nutrients_dm[prof.columns]).abs().to_numpy().max()
+    assert diff < 1e-9
+
+
+def test_binding_requirements_fail_about_half_of_batches(setup):
+    from feedopt.uncertainty import compliance_table, load_variability, simulate_profiles, variance_contribution
+    nm, prices, req, limits = setup
+    r = formulate(nm, prices, req, limits)
+    raw, var = load_raw_ingredients(), load_variability()
+    prof = simulate_profiles(r.recipe, raw, var, n=4000, seed=1)
+    comp = compliance_table(prof, req).set_index(["nutrient", "bound"])
+    # A requirement held exactly at its limit should be missed by roughly half of batches,
+    # one with plenty of slack by almost none.
+    assert 40 < comp.loc[("epa_dha", "min"), "pct_batches_failing"] < 60
+    assert comp.loc[("ash", "max"), "pct_batches_failing"] < 1
+    contrib = variance_contribution(r.recipe, raw, var, ["epa_dha"], n=2000, seed=1)
+    assert contrib["epa_dha"].sum() == pytest.approx(100)
+    assert contrib["epa_dha"].idxmax() == "fish_oil"

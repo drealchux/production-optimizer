@@ -174,3 +174,35 @@ Re-formulating within available stock: status Optimal, cost 1,158 USD/t (+53).
 | fish oil | 1.25 |
 | algal oil | 0.83 |
 | dl methionine | 0.24 |
+
+## 10. Batch-to-batch variability
+
+10,000 simulated batches of the base recipe, each drawing every ingredient's composition from its Feedipedia mean and standard deviation (see `data/raw/ingredient_variability.csv`).
+
+Batches meeting **all 21 requirements at once: 2.0%**.
+
+Requirements missed by at least 1% of batches:
+
+| nutrient          | bound   |   requirement |   mean |    sd |     p5 |    p95 |   pct_batches_failing |   margin_for_95pct |
+|:------------------|:--------|--------------:|-------:|------:|-------:|-------:|----------------------:|-------------------:|
+| met               | min     |           1   |  1     | 0.033 |  0.948 |  1.055 |                 50.53 |              0.054 |
+| fibre             | max     |           2   |  2.003 | 0.173 |  1.718 |  2.286 |                 50.49 |              0.284 |
+| crude_protein     | min     |          40   | 40.005 | 0.72  | 38.848 | 41.208 |                 50.39 |              1.185 |
+| epa_dha           | min     |           1   |  1     | 0.135 |  0.778 |  1.225 |                 50.11 |              0.223 |
+| crude_lipid       | min     |          30   | 30.002 | 0.273 | 29.551 | 30.456 |                 49.79 |              0.45  |
+| phosphorus        | min     |           0.6 |  0.607 | 0.049 |  0.526 |  0.688 |                 43.89 |              0.081 |
+| digestible_energy | min     |          21   | 21.222 | 0.185 | 20.92  | 21.526 |                 11.31 |              0.304 |
+
+`margin_for_95pct` is how far the recipe's average would have to sit inside the limit for 95% of batches to meet it (1.645 standard deviations).
+
+Share of each nutrient's variance caused by each ingredient (%):
+
+|                   |   soy_protein_concentrate |   wheat |   maize_gluten_meal |   fish_meal |   soybean_meal |   fish_oil |
+|:------------------|--------------------------:|--------:|--------------------:|------------:|---------------:|-----------:|
+| met               |                      17.1 |     1.1 |                28.3 |        53.3 |            0.3 |        0   |
+| fibre             |                      76.6 |     8.7 |                11.1 |         0   |            3.7 |        0   |
+| crude_protein     |                      42.7 |     5.9 |                23.4 |        27.4 |            0.5 |        0   |
+| epa_dha           |                       0.1 |     0   |                 0   |        12.2 |            0   |       87.7 |
+| crude_lipid       |                      22.9 |     5.7 |                29.8 |        40.7 |            0.9 |        0   |
+| phosphorus        |                      13.7 |     1.1 |                16   |        68.9 |            0.3 |        0   |
+| digestible_energy |                      43.4 |     1.9 |                17.3 |        36.2 |            1.2 |        0   |

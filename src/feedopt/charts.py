@@ -140,3 +140,44 @@ def shadow_bar(shadow: pd.DataFrame, path: Path, title: str, subtitle: str):
     fig.tight_layout()
     fig.savefig(path, dpi=160)
     plt.close(fig)
+
+
+NUTRIENT_LABELS = {
+    "crude_protein": "Crude protein (% DM)", "crude_lipid": "Crude lipid (% DM)", "phosphorus": "Phosphorus (% DM)",
+    "epa_dha": "EPA+DHA (% DM)", "fibre": "Fibre (% DM)", "met": "Methionine (% DM)",
+    "digestible_energy": "Digestible energy (MJ/kg DM)",
+}
+
+
+def batch_histograms(profiles: pd.DataFrame, compliance: pd.DataFrame, path: Path, title: str, subtitle: str):
+    """One small histogram per requirement: simulated batches, the limit, and the failing side shaded."""
+    rows = list(compliance.itertuples())
+    ncols = 3
+    nrows = -(-len(rows) // ncols)
+    fig, axes = plt.subplots(nrows, ncols, figsize=(10, 3.0 * nrows + 0.6), squeeze=False)
+    for ax, r in zip(axes.flat, rows):
+        v = profiles[r.nutrient]
+        _, edges, patches = ax.hist(v, bins=40, color=PALETTE[0], edgecolor=SURFACE, linewidth=0.5)
+        for p, left, right in zip(patches, edges[:-1], edges[1:]):
+            mid = (left + right) / 2
+            failing = mid < r.requirement if r.bound == "min" else mid > r.requirement
+            if failing:
+                p.set_facecolor(PALETTE[7])
+        ax.axvline(r.requirement, color=INK, linewidth=1.2, linestyle="--")
+        ax.set_facecolor(SURFACE)
+        for s in ["top", "right", "left"]:
+            ax.spines[s].set_visible(False)
+        ax.spines["bottom"].set_color(GRID)
+        ax.tick_params(colors=INK2, length=0, labelsize=8)
+        ax.set_yticks([])
+        ax.set_title(f"{NUTRIENT_LABELS.get(r.nutrient, r.nutrient)}, {r.bound} {r.requirement:g}\n"
+                     f"{r.pct_batches_failing:.0f}% of batches fail",
+                     loc="left", fontsize=9, color=INK)
+    for ax in list(axes.flat)[len(rows):]:
+        ax.set_visible(False)
+    fig.patch.set_facecolor(SURFACE)
+    fig.suptitle(title, x=0.01, ha="left", fontsize=12, fontweight="bold", color=INK)
+    fig.text(0.01, 1 - 0.75 / fig.get_figheight(), subtitle, fontsize=9, color=INK2)
+    fig.tight_layout(rect=(0, 0, 1, 1 - 0.95 / fig.get_figheight()))
+    fig.savefig(path, dpi=160)
+    plt.close(fig)

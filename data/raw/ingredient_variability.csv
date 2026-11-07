@@ -1,0 +1,110 @@
+ingredient,column,sd,n_samples,source,status
+fish_meal,dm,1.4,795,Feedipedia node/11685 SD,sourced
+fish_meal,cp,3.8,82,Feedipedia node/11685 SD,sourced
+fish_meal,fat,1.8,425,Feedipedia node/11685 SD,sourced
+fish_meal,ash,3.3,715,Feedipedia node/11685 SD,sourced
+fish_meal,ge,1.3,17,Feedipedia node/11685 SD,sourced
+fish_meal,p,4.3,440,Feedipedia node/11685 SD,sourced
+fish_meal,lys,0.6,156,Feedipedia node/11685 SD,sourced
+fish_meal,met,0.3,125,Feedipedia node/11685 SD,sourced
+fish_meal,thr,0.3,132,Feedipedia node/11685 SD,sourced
+fish_meal,trp,0.1,69,Feedipedia node/11685 SD,sourced
+fish_meal,arg,1.3,127,Feedipedia node/11685 SD,sourced
+fish_meal,his,0.7,83,Feedipedia node/11685 SD,sourced
+fish_meal,ile,0.4,133,Feedipedia node/11685 SD,sourced
+fish_meal,leu,0.5,131,Feedipedia node/11685 SD,sourced
+fish_meal,phe,0.3,132,Feedipedia node/11685 SD,sourced
+fish_meal,val,0.4,129,Feedipedia node/11685 SD,sourced
+fish_meal,epa_dha_pct_fat,3.0,,Assumed SD; Feedipedia has no fatty acid SD for fish meal,assumed
+fish_oil,dm,0.1,39,Feedipedia node/12094 SD,sourced
+fish_oil,epa_dha_pct_fat,4.0,,IMARPE anchoveta range EPA+DHA ~12 to 29% of fatty acids (Roque et al. 2026); SD set to about a quarter of the range,assumed within a sourced range
+soybean_meal,dm,0.7,9654,Feedipedia node/26068 SD,sourced
+soybean_meal,cp,1.1,9722,Feedipedia node/26068 SD,sourced
+soybean_meal,fat,0.5,7801,Feedipedia node/26068 SD,sourced
+soybean_meal,ash,0.6,2899,Feedipedia node/26068 SD,sourced
+soybean_meal,fibre,0.7,3328,Feedipedia node/26068 SD,sourced
+soybean_meal,starch,1.4,367,Feedipedia node/26068 SD,sourced
+soybean_meal,ge,0.6,136,Feedipedia node/26068 SD,sourced
+soybean_meal,p,0.6,47,Feedipedia node/26068 SD,sourced
+soybean_meal,lys,0.2,212,Feedipedia node/26068 SD,sourced
+soybean_meal,met,0.06,155,Feedipedia node/26068 SD,sourced
+soybean_meal,thr,0.1,156,Feedipedia node/26068 SD,sourced
+soybean_meal,trp,0.04,123,Feedipedia node/26068 SD,sourced
+soybean_meal,arg,0.3,154,Feedipedia node/26068 SD,sourced
+soybean_meal,his,0.1,158,Feedipedia node/26068 SD,sourced
+soybean_meal,ile,0.2,158,Feedipedia node/26068 SD,sourced
+soybean_meal,leu,0.2,156,Feedipedia node/26068 SD,sourced
+soybean_meal,phe,0.1,156,Feedipedia node/26068 SD,sourced
+soybean_meal,val,0.2,156,Feedipedia node/26068 SD,sourced
+soy_protein_concentrate,dm,1.0,,Assumed SD for a typical commercial SPC spec,assumed
+soy_protein_concentrate,cp,1.5,,Assumed SD for a typical commercial SPC spec,assumed
+soy_protein_concentrate,fat,0.3,,Assumed SD for a typical commercial SPC spec,assumed
+soy_protein_concentrate,ash,0.5,,Assumed SD for a typical commercial SPC spec,assumed
+soy_protein_concentrate,fibre,0.5,,Assumed SD for a typical commercial SPC spec,assumed
+soy_protein_concentrate,starch,1.0,,Assumed SD for a typical commercial SPC spec,assumed
+soy_protein_concentrate,ge,0.5,,Assumed SD for a typical commercial SPC spec,assumed
+soy_protein_concentrate,p,0.6,,Assumed SD for a typical commercial SPC spec,assumed
+soy_protein_concentrate,lys,0.2,,"Amino acid SD copied from Feedipedia soybean meal (node/26068), like the profile itself",assumed
+soy_protein_concentrate,met,0.06,,"Amino acid SD copied from Feedipedia soybean meal (node/26068), like the profile itself",assumed
+soy_protein_concentrate,thr,0.1,,"Amino acid SD copied from Feedipedia soybean meal (node/26068), like the profile itself",assumed
+soy_protein_concentrate,trp,0.04,,"Amino acid SD copied from Feedipedia soybean meal (node/26068), like the profile itself",assumed
+soy_protein_concentrate,arg,0.3,,"Amino acid SD copied from Feedipedia soybean meal (node/26068), like the profile itself",assumed
+soy_protein_concentrate,his,0.1,,"Amino acid SD copied from Feedipedia soybean meal (node/26068), like the profile itself",assumed
+soy_protein_concentrate,ile,0.2,,"Amino acid SD copied from Feedipedia soybean meal (node/26068), like the profile itself",assumed
+soy_protein_concentrate,leu,0.2,,"Amino acid SD copied from Feedipedia soybean meal (node/26068), like the profile itself",assumed
+soy_protein_concentrate,phe,0.1,,"Amino acid SD copied from Feedipedia soybean meal (node/26068), like the profile itself",assumed
+soy_protein_concentrate,val,0.2,,"Amino acid SD copied from Feedipedia soybean meal (node/26068), like the profile itself",assumed
+maize_gluten_meal,dm,1.7,1662,Feedipedia node/12288 SD,sourced
+maize_gluten_meal,cp,2.9,1659,Feedipedia node/12288 SD,sourced
+maize_gluten_meal,fat,1.2,625,Feedipedia node/12288 SD,sourced
+maize_gluten_meal,ash,0.8,406,Feedipedia node/12288 SD,sourced
+maize_gluten_meal,fibre,0.5,240,Feedipedia node/12288 SD,sourced
+maize_gluten_meal,starch,3.5,204,Feedipedia node/12288 SD,sourced
+maize_gluten_meal,ge,0.8,36,Feedipedia node/12288 SD,sourced
+maize_gluten_meal,p,1.7,153,Feedipedia node/12288 SD,sourced
+maize_gluten_meal,lys,0.1,75,Feedipedia node/12288 SD,sourced
+maize_gluten_meal,met,0.2,57,Feedipedia node/12288 SD,sourced
+maize_gluten_meal,thr,0.2,65,Feedipedia node/12288 SD,sourced
+maize_gluten_meal,trp,0.1,32,Feedipedia node/12288 SD,sourced
+maize_gluten_meal,arg,0.3,62,Feedipedia node/12288 SD,sourced
+maize_gluten_meal,his,0.2,52,Feedipedia node/12288 SD,sourced
+maize_gluten_meal,ile,0.3,63,Feedipedia node/12288 SD,sourced
+maize_gluten_meal,leu,0.7,64,Feedipedia node/12288 SD,sourced
+maize_gluten_meal,phe,0.3,64,Feedipedia node/12288 SD,sourced
+maize_gluten_meal,val,0.3,62,Feedipedia node/12288 SD,sourced
+faba_bean_dehulled,dm,1.3,23,Feedipedia node/19701 SD,sourced
+faba_bean_dehulled,cp,2.1,28,Feedipedia node/19701 SD,sourced
+faba_bean_dehulled,fat,0.2,9,Feedipedia node/19701 SD,sourced
+faba_bean_dehulled,ash,0.3,21,Feedipedia node/19701 SD,sourced
+faba_bean_dehulled,fibre,0.7,19,Feedipedia node/19701 SD,sourced
+faba_bean_dehulled,starch,2.8,15,Feedipedia node/19701 SD,sourced
+faba_bean_dehulled,ge,0.2,18,Feedipedia node/19701 SD,sourced
+faba_bean_dehulled,p,0.8,5,Feedipedia node/19701 SD,sourced
+faba_bean_dehulled,lys,0.5,15,Feedipedia node/19701 SD,sourced
+faba_bean_dehulled,met,0.1,15,Feedipedia node/19701 SD,sourced
+faba_bean_dehulled,thr,0.3,15,Feedipedia node/19701 SD,sourced
+faba_bean_dehulled,trp,0.1,9,Feedipedia node/19701 SD,sourced
+faba_bean_dehulled,arg,0.8,13,Feedipedia node/19701 SD,sourced
+faba_bean_dehulled,his,0.2,8,Feedipedia node/19701 SD,sourced
+faba_bean_dehulled,ile,0.3,13,Feedipedia node/19701 SD,sourced
+faba_bean_dehulled,leu,0.4,13,Feedipedia node/19701 SD,sourced
+faba_bean_dehulled,phe,0.2,12,Feedipedia node/19701 SD,sourced
+faba_bean_dehulled,val,0.4,13,Feedipedia node/19701 SD,sourced
+wheat,dm,1.3,41570,Feedipedia node/12754 SD,sourced
+wheat,cp,1.3,34649,Feedipedia node/12754 SD,sourced
+wheat,fat,0.3,8597,Feedipedia node/12754 SD,sourced
+wheat,ash,0.2,9013,Feedipedia node/12754 SD,sourced
+wheat,fibre,0.4,13440,Feedipedia node/12754 SD,sourced
+wheat,starch,1.9,25431,Feedipedia node/12754 SD,sourced
+wheat,ge,0.2,328,Feedipedia node/12754 SD,sourced
+wheat,p,0.4,2951,Feedipedia node/12754 SD,sourced
+wheat,lys,0.2,457,Feedipedia node/12754 SD,sourced
+wheat,met,0.1,213,Feedipedia node/12754 SD,sourced
+wheat,thr,0.2,200,Feedipedia node/12754 SD,sourced
+wheat,trp,0.1,104,Feedipedia node/12754 SD,sourced
+wheat,arg,0.3,177,Feedipedia node/12754 SD,sourced
+wheat,his,0.2,138,Feedipedia node/12754 SD,sourced
+wheat,ile,0.2,196,Feedipedia node/12754 SD,sourced
+wheat,leu,0.3,197,Feedipedia node/12754 SD,sourced
+wheat,phe,0.2,190,Feedipedia node/12754 SD,sourced
+wheat,val,0.3,195,Feedipedia node/12754 SD,sourced

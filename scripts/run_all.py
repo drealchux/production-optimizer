@@ -14,9 +14,14 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from feedopt import charts  # noqa: E402
-from feedopt.data import load_all, load_benchmarks, load_price_history, load_requirements  # noqa: E402
+from feedopt.data import (  # noqa: E402
+    load_all, load_benchmarks, load_price_history, load_raw_ingredients, load_requirements,
+)
 from feedopt.model import check_requirements, formulate  # noqa: E402
 from feedopt.planning import availability_aware_formulation, shortfall_report  # noqa: E402
+from feedopt.uncertainty import (  # noqa: E402
+    batch_pass_rate, compliance_table, load_variability, simulate_profiles, variance_contribution,
+)
 from feedopt.scenarios import (  # noqa: E402
     category_summary, historical_cost, marine_cap, price_sweep, requirement_sweep, supply_shock,
 )
@@ -24,6 +29,7 @@ from feedopt.scenarios import (  # noqa: E402
 OUT = ROOT / "outputs"
 OUT.mkdir(exist_ok=True)
 PRODUCTION_T = 20_000  # illustrative monthly production for one plant
+N_BATCHES = 10_000  # simulated batches for the variability check
 
 
 def fmt_recipe(r) -> str:
@@ -44,9 +50,9 @@ def main():
     check.to_csv(OUT / "base_requirement_check.csv", index=False)
     base.shadow_prices.to_csv(OUT / "base_shadow_prices.csv", index=False)
     base.reduced_costs.to_csv(OUT / "base_reduced_costs.csv", header=["usd_per_t_price_drop_needed"])
-    charts.recipe_bar(base.recipe, OUT / "01_base_recipe.png", "Least-cost grower feed (1 to 2 kg salmon)",
+    charts.recipe_bar(base.recipe, OUT / "base_recipe.png", "Least-cost grower feed (1 to 2 kg salmon)",
                       f"Raw material cost {base.cost_usd_per_t:,.0f} USD per tonne, March 2026 prices")
-    charts.shadow_bar(base.shadow_prices, OUT / "02_shadow_prices.png", "Which constraints cost money?",
+    charts.shadow_bar(base.shadow_prices, OUT / "shadow_prices.png", "Which constraints cost money?",
                       "Shadow price: extra USD per tonne of feed if the limit tightens by one unit")
     marine = base.recipe[["fish_meal", "fish_oil"]].sum()
     lines += ["## 1. Base case: grower feed, 1 to 2 kg fish", "",
@@ -70,7 +76,7 @@ def main():
     # 3. Fish oil price sweep
     fo = price_sweep(nm, prices, req, limits, "fish_oil", np.arange(1500, 9001, 250))
     fo.to_csv(OUT / "fish_oil_price_sweep.csv", index=False)
-    charts.stacked_sweep(fo, "price", OUT / "03_fish_oil_price_sweep.png", "How the recipe reacts to fish oil prices",
+    charts.stacked_sweep(fo, "price", OUT / "fish_oil_price_sweep.png", "How the recipe reacts to fish oil prices",
                          "Grower feed re-optimized at each fish oil price", "Fish oil price (USD/t)")
     switch = fo[fo["algal_oil"] > 0.01]
     switch_txt = (f"Algal oil enters the recipe once fish oil passes about **{switch['price'].iloc[0]:,.0f} USD/t**."
@@ -83,9 +89,9 @@ def main():
     ed = requirement_sweep(nm, prices, req, limits, "epa_dha", "min", np.round(np.arange(0.6, 2.61, 0.1), 2))
     ed.to_csv(OUT / "epa_dha_sweep.csv", index=False)
     feasible = ed[ed["status"] == "Optimal"]
-    charts.stacked_sweep(feasible, "requirement", OUT / "04_epa_dha_sweep.png", "The cost of omega-3 in the fillet",
+    charts.stacked_sweep(feasible, "requirement", OUT / "epa_dha_sweep.png", "The cost of omega-3 in the fillet",
                          "Recipe at each minimum EPA+DHA level", "Minimum EPA+DHA (% of dry matter)")
-    charts.line_chart(feasible["requirement"], feasible["cost_usd_per_t"], OUT / "05_epa_dha_cost.png",
+    charts.line_chart(feasible["requirement"], feasible["cost_usd_per_t"], OUT / "epa_dha_cost.png",
                       "Raw material cost vs EPA+DHA target", "Each point is a re-optimized recipe",
                       "Minimum EPA+DHA (% of dry matter)", "USD per tonne")
     r1 = feasible.loc[feasible["requirement"].sub(1.0).abs().idxmin(), "cost_usd_per_t"]
@@ -114,7 +120,7 @@ def main():
     hist = historical_cost(nm, prices, req, limits, load_price_history())
     hist.to_csv(OUT / "historical_cost.csv", index=False)
     q = hist[hist["period_type"] != "annual"]
-    charts.line_chart(q["period"], q["cost_usd_per_t"], OUT / "06_historical_cost.png",
+    charts.line_chart(q["period"], q["cost_usd_per_t"], OUT / "historical_cost.png",
                       "Optimal recipe cost under real price history",
                       "World Bank prices for fish meal, soybean meal, maize and wheat", "Period", "USD per tonne",
                       rotate=True)
@@ -130,7 +136,7 @@ def main():
     comp = pd.DataFrame({"This model": cat, "Norway 2020 (Nofima)": nor}).fillna(0.0)
     comp = comp.loc[["marine", "plant_protein", "vegetable_oil", "carbohydrate", "micro", "novel"]]
     comp.to_csv(OUT / "benchmark_categories.csv")
-    charts.grouped_categories(comp, OUT / "07_benchmark_norway.png", "Model recipe vs real Norwegian salmon feed",
+    charts.grouped_categories(comp, OUT / "benchmark_norway.png", "Model recipe vs real Norwegian salmon feed",
                               "Ingredient categories, % of feed. Norway 2020 from Aas et al. 2022 (Nofima)")
     prot = bm[bm["benchmark"] == "skretting_protec_4_5mm"].set_index("metric")["value"]
     dmf = base.nutrients_dm["dry_matter_pct_asfed"] / 100
@@ -154,6 +160,33 @@ def main():
               f"Re-formulating within available stock: status {aware.status}, cost "
               f"{aware.cost_usd_per_t:,.0f} USD/t (+{aware.cost_usd_per_t - base.cost_usd_per_t:,.0f}).", "",
               "| Ingredient | % as fed |", "|---|---|", fmt_recipe(aware), ""]
+
+    # 10. Batch-to-batch variability: does the base recipe actually meet spec?
+    raw = load_raw_ingredients()
+    var = load_variability()
+    profiles = simulate_profiles(base.recipe, raw, var, n=N_BATCHES, seed=0)
+    comp_mc = compliance_table(profiles, req)
+    comp_mc.to_csv(OUT / "batch_compliance.csv", index=False)
+    pass_rate = batch_pass_rate(profiles, req)
+    at_risk = comp_mc[comp_mc["pct_batches_failing"] >= 1].sort_values("pct_batches_failing", ascending=False)
+    contrib = variance_contribution(base.recipe, raw, var, list(at_risk["nutrient"].unique()), seed=0)
+    contrib.T.to_csv(OUT / "batch_variance_by_ingredient.csv")
+    charts.batch_histograms(profiles, at_risk, OUT / "batch_variability.png",
+                            "The least-cost recipe misses spec in about half of batches",
+                            f"{N_BATCHES:,} simulated batches with Feedipedia ingredient variability. "
+                            "Dashed line: requirement. Red: batches that fail it.")
+    show = at_risk[["nutrient", "bound", "requirement", "mean", "sd", "p5", "p95",
+                    "pct_batches_failing", "margin_for_95pct"]]
+    lines += ["## 10. Batch-to-batch variability", "",
+              f"{N_BATCHES:,} simulated batches of the base recipe, each drawing every ingredient's composition "
+              "from its Feedipedia mean and standard deviation (see `data/raw/ingredient_variability.csv`).", "",
+              f"Batches meeting **all {len(req)} requirements at once: {pass_rate:.1f}%**.", "",
+              "Requirements missed by at least 1% of batches:", "",
+              show.round(3).to_markdown(index=False), "",
+              "`margin_for_95pct` is how far the recipe's average would have to sit inside the limit for 95% of "
+              "batches to meet it (1.645 standard deviations).", "",
+              "Share of each nutrient's variance caused by each ingredient (%):", "",
+              contrib.T.round(1).to_markdown(), ""]
 
     (OUT / "summary.md").write_text("\n".join(lines))
     print("\n".join(lines))
