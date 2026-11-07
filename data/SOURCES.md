@@ -50,7 +50,8 @@ Standard deviations used to simulate batch-to-batch variation, one row per ingre
 
 - **Sourced:** the SD column of the Feedipedia tables already used for the averages (fish meal node/11685, soybean meal node/26068, maize gluten meal node/12288, faba beans node/19701, wheat node/12754, fish oil dry matter node/12094). `n_samples` is Feedipedia's sample count. Fish meal and soybean meal amino acid values are marked by Feedipedia as equation-derived.
 - **Assumed:** soy protein concentrate proximate SDs (its amino acid SDs are copied from soybean meal, like its profile), fish meal EPA+DHA (SD 3 points of fat), and fish oil EPA+DHA (SD 4 points of fat, about a quarter of the IMARPE anchoveta range of roughly 12 to 29% of fatty acids).
-- **Held fixed:** rapeseed and algal oil, wheat gluten, pea protein, crystalline amino acids, phosphate, premix, and all digestibility coefficients.
+- **Assumed for ingredients the base recipe doesn't use** (so the chance-constrained model can't treat them as risk-free): wheat gluten and pea protein proximate SDs, with amino acid SDs at 5% of their values; algal oil EPA+DHA (SD 2 points of fat); monocalcium phosphate P (SD 3 g/kg).
+- **Held fixed:** rapeseed oil, crystalline amino acids, premix, and all digestibility coefficients.
 
 Caveats: Feedipedia SDs pool samples from many origins and years, so they are wider than a single supplier's lot-to-lot spread. Columns are drawn independently, so real correlations (for example protein against ash in fish meal) are ignored. Both push the simulated failure rates up; the fixed columns and digestibility push them down.
 

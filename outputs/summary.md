@@ -206,3 +206,31 @@ Share of each nutrient's variance caused by each ingredient (%):
 | crude_lipid       |                      22.9 |     5.7 |                29.8 |        40.7 |            0.9 |        0   |
 | phosphorus        |                      13.7 |     1.1 |                16   |        68.9 |            0.3 |        0   |
 | digestible_energy |                      43.4 |     1.9 |                17.3 |        36.2 |            1.2 |        0   |
+
+## 11. Chance-constrained formulation
+
+Each requirement must hold in a target share of batches (alpha). With independent ingredient lots this is a second-order cone constraint, solved with CVXPY and Clarabel. At alpha = 50% it is exactly the LP. Every recipe is then re-checked by simulating 10,000 batches.
+
+|   alpha_pct |   cost_usd_per_t |   all_requirements_pct | weakest_requirement   |   weakest_pass_pct |   extra_vs_lp |
+|------------:|-----------------:|-----------------------:|:----------------------|-------------------:|--------------:|
+|        50   |          1104.6  |                   2.14 | epa_dha_min           |              48.86 |          0    |
+|        80   |          1143.4  |                  29.24 | met_min               |              79.27 |         38.8  |
+|        90   |          1165.18 |                  55.58 | fibre_max             |              89.74 |         60.58 |
+|        95   |          1184.27 |                  74.67 | fibre_max             |              94.93 |         79.67 |
+|        99   |          1224.26 |                  94.18 | fibre_max             |              98.91 |        119.66 |
+|        99.5 |          1240.39 |                  96.72 | crude_lipid_min       |              99.47 |        135.79 |
+|        99.9 |          1276.23 |                  99.34 | fibre_max             |              99.86 |        171.63 |
+
+Recipe at each target (% as fed):
+
+|   alpha_pct |   fish_meal |   fish_oil |   soy_protein_concentrate |   soybean_meal |   maize_gluten_meal |   wheat_gluten |   wheat |   rapeseed_oil |   monocalcium_phosphate |   l_lysine_hcl |   dl_methionine |   premix |
+|------------:|------------:|-----------:|--------------------------:|---------------:|--------------------:|---------------:|--------:|---------------:|------------------------:|---------------:|----------------:|---------:|
+|        50   |         9.7 |        3   |                      30.6 |              5 |                  12 |            0   |    13.6 |           23.4 |                     0   |            0.5 |             0.3 |        2 |
+|        80   |        13.4 |        3.2 |                      27.6 |              5 |                  12 |            0   |    13   |           23.2 |                     0   |            0.5 |             0.2 |        2 |
+|        90   |        15.1 |        3.3 |                      26.3 |              5 |                  12 |            0   |    12.5 |           23   |                     0   |            0.5 |             0.2 |        2 |
+|        95   |        16.5 |        3.5 |                      25.4 |              5 |                  12 |            0   |    12   |           22.9 |                     0   |            0.5 |             0.2 |        2 |
+|        99   |        18.9 |        3.9 |                      24.1 |              5 |                  12 |            0   |    10.6 |           22.6 |                     0.1 |            0.5 |             0.2 |        2 |
+|        99.5 |        19.1 |        4.2 |                      23.6 |              5 |                  12 |            0.6 |    10.1 |           22.4 |                     0.2 |            0.5 |             0.3 |        2 |
+|        99.9 |        15.7 |        5.3 |                      22   |              5 |                  12 |            5.3 |     9.8 |           21.6 |                     0.6 |            0.5 |             0.3 |        2 |
+
+Fixed margin shortcut (simulate the LP recipe once, move each requirement inward by 1.645 of its standard deviations, re-run the LP): **1,178 USD/t**, 61.7% of batches meet everything, weakest requirement met_min at 86.6% (target 95%). The chance-constrained recipe at 95% costs **1,184 USD/t** and its weakest requirement passes 94.9%.

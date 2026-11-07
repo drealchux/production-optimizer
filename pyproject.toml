@@ -5,6 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "cvxpy>=1.5",
     "matplotlib>=3.7",
     "pandas>=2.0",
     "pulp>=2.7,<3",

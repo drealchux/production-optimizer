@@ -1,6 +1,6 @@
 # Salmon Feed Optimizer
 
-Least-cost formulation of Atlantic salmon feed with linear programming, built on free, sourced data, with the scenario and raw material planning questions a feed company deals with every day.
+Least-cost formulation of Atlantic salmon feed with linear programming, built on free, sourced data, with the scenario and raw material planning questions a feed company deals with every day. It then tests how often the least-cost recipe actually meets spec when ingredient lots vary, and uses chance-constrained (second-order cone) optimization to price a recipe that does.
 
 ![Base recipe](outputs/base_recipe.png)
 
@@ -18,6 +18,7 @@ Every batch of salmon feed is a recipe: some fish meal, some soy protein, some r
 8. **Benchmarking.** Compares the result with Norway's actual 2020 salmon feed (Nofima) and a measured Skretting commercial feed profile.
 9. **Raw material planning.** Turns a recipe and a monthly production plan into tonnage, checks it against stock and inbound deliveries, flags shortfalls and re-formulates within what's available.
 10. **Batch variability.** Simulates 10,000 batches with Feedipedia's ingredient standard deviations to see how often the least-cost recipe actually meets spec, and which ingredient causes the spread.
+11. **Chance-constrained formulation.** Re-optimizes so each requirement is met in a chosen share of batches (80% to 99.9%), using second-order cone constraints, and prices that reliability.
 
 There is also a small Streamlit app to play with prices, targets and stock.
 
@@ -36,6 +37,8 @@ March 2026 prices, grower feed for 1 to 2 kg fish:
 | Fish meal + fish oil capped at 8% | only +10 USD/t |
 | Fish oil price at which algal oil wins | about 6,750 USD/t |
 | Simulated batches meeting every requirement | **2%** (six binding requirements each fail in 44 to 51% of batches) |
+| Each requirement met in 95% of batches | 1,184 USD/t (+80), 75% of batches meet everything |
+| 94% of batches meeting everything | 1,224 USD/t (+120), each requirement held at 99% |
 
 ![Fish oil sweep](outputs/fish_oil_price_sweep.png)
 
@@ -49,9 +52,15 @@ March 2026 prices, grower feed for 1 to 2 kg fish:
 
 ![Benchmark](outputs/benchmark_norway.png)
 
-**Least cost is not the same as reliable.** The optimizer pushes every binding requirement exactly to its limit, assuming each ingredient has its average composition. Real lots vary. Drawing 10,000 batches from Feedipedia's published standard deviations, methionine, fibre, protein, EPA+DHA, lipid and phosphorus each miss spec in roughly half of batches, and only 2% of batches meet all 21 requirements at once. The spread has clear owners: fish oil causes 88% of the EPA+DHA variance, fish meal 69% of phosphorus and 53% of methionine. To meet each requirement in 95% of batches the recipe would need to sit about 1.2 points above the protein minimum and 0.22 points above the EPA+DHA minimum. Pricing that safety margin properly is the next step (chance-constrained formulation).
+**Least cost is not the same as reliable.** The optimizer pushes every binding requirement exactly to its limit, assuming each ingredient has its average composition. Real lots vary. Drawing 10,000 batches from Feedipedia's published standard deviations, methionine, fibre, protein, EPA+DHA, lipid and phosphorus each miss spec in roughly half of batches, and only 2% of batches meet all 21 requirements at once. The spread has clear owners: fish oil causes 88% of the EPA+DHA variance, fish meal 69% of phosphorus and 53% of methionine. To meet each requirement in 95% of batches the recipe would need to sit about 1.2 points above the protein minimum and 0.22 points above the EPA+DHA minimum. The chance-constrained model below prices that margin.
 
 ![Batch variability](outputs/batch_variability.png)
+
+**What reliability costs.** The chance-constrained model requires each nutrient to be met in a target share of batches. Holding each requirement at 95% costs 80 USD/t more than the least-cost recipe (+7%), and simulation confirms every requirement then passes in about 95% of batches. Because any of the 21 requirements can fail, only 75% of batches meet all of them at once. Getting about 94% of batches fully in spec means holding each at 99%, for +120 USD/t (+11%). The model buys reliability mainly by adding fish meal (9.7% to 16.5% at 95%) and trimming soy protein concentrate, since fish meal's high protein, methionine and phosphorus lift the averages well clear of the limits, even though it is the main source of variance for phosphorus and methionine.
+
+The common shortcut, which simulates the least-cost recipe once, adds 1.645 standard deviations to each requirement and re-runs the LP, is 6 USD/t cheaper but misses its own target. Once the recipe changes, the spreads change too, so methionine passes in only 87% of batches instead of 95%. The chance-constrained model accounts for the recipe's own spread directly.
+
+![Reliability cost](outputs/reliability_cost.png)
 
 Full tables for every scenario are in [`outputs/summary.md`](outputs/summary.md).
 
@@ -72,6 +81,14 @@ FAO requirements are on a dry matter basis while recipes are as fed, so requirem
 
 Solved with PuLP and CBC, which also returns the duals (shadow prices) and reduced costs.
 
+**Chance-constrained version.** Each requirement row above is `sum_i a_i x_i >= 0` with a per-ingredient coefficient `a_i` (for example `n_i - r * dm_i`). When ingredient composition is random and lots are independent, `P(a'x >= 0) >= alpha` becomes
+
+```
+mu' x  -  z_alpha * || diag(sigma) x ||_2  >=  0
+```
+
+a second-order cone constraint, assuming the blend is roughly normal. `mu` is the average coefficient and `sigma` its standard deviation, estimated by simulating each ingredient from Feedipedia's standard deviations. At alpha = 50% it reduces to the LP. Solved with CVXPY and Clarabel, then every recipe is re-checked by Monte Carlo simulation.
+
 ## Data
 
 Every value is tagged **sourced**, **derived** or **assumed** in `data/raw/`. Details and links in [`data/SOURCES.md`](data/SOURCES.md).
@@ -79,7 +96,7 @@ Every value is tagged **sourced**, **derived** or **assumed** in `data/raw/`. De
 | Layer | Used in | Source |
 |---|---|---|
 | Ingredient composition | `ingredients_raw.csv` | Feedipedia (INRAE, CIRAD, AFZ, FAO) for fish meal, fish oil, soybean meal, maize gluten meal, faba beans, wheat |
-| Ingredient variability | `ingredient_variability.csv` | Feedipedia standard deviations for the same six ingredients; SPC and EPA+DHA spreads assumed |
+| Ingredient variability | `ingredient_variability.csv` | Feedipedia standard deviations for the same six ingredients; SPC, wheat gluten, pea protein, MCP and EPA+DHA spreads assumed |
 | Salmon requirements | `requirements.csv` | FAO AFFRIS Atlantic salmon Tables 2 and 9 |
 | Prices | `prices.csv`, `price_history.csv` | World Bank Pink Sheet (May 2026) and IndexMundi (March 2026) |
 | Real-world benchmark | `benchmarks.csv` | Aas et al. 2022, Nofima (Norway 2020 feed); Mowi Industry Handbook 2026; Skretting Protec profile from the aquacultuR R package; FAO AFFRIS Table 3 |
@@ -122,7 +139,7 @@ Every value is tagged **sourced**, **derived** or **assumed** in `data/raw/`. De
 - There is no free fish oil price series, so fish oil is an assumption that gets stress-tested.
 - Most digestibility values are typical salmonid literature values. Feedipedia only has salmonid values for a few feeds. The USDA-ARS Fish Ingredient Digestibility Database would be the next upgrade.
 - Soy protein concentrate, wheat gluten and pea protein composition are typical specs, not lab values.
-- Feedipedia standard deviations pool many origins, so the batch simulation overstates a single supplier's spread, and nutrients are drawn independently. Digestibility is held fixed.
+- Feedipedia standard deviations pool many origins, so the batch simulation and the cost of reliability overstate what a single supplier would see. Nutrients are drawn independently, digestibility is held fixed, and the chance constraints hold each requirement separately rather than all of them jointly.
 - Stock data in the planning demo is illustrative.
 
 ## Run it
@@ -135,8 +152,8 @@ Run every command from the project root (the folder with `pyproject.toml`), not 
 
 ```bash
 uv sync                                     # first time only
-uv run python scripts/run_all.py            # writes tables, charts and summary.md to outputs/
-uv run pytest -q                            # 11 tests: unit conversion, feasibility, limits, monotonicity, caps, variability
+uv run python scripts/run_all.py            # writes tables, charts and summary.md to outputs/ (about 30 s)
+uv run pytest -q                            # 13 tests: unit conversion, feasibility, limits, monotonicity, caps, variability, chance constraints
 uv run streamlit run app/streamlit_app.py   # interactive formulator
 ```
 
@@ -210,6 +227,7 @@ src/feedopt/
   scenarios.py   price sweeps, requirement sweeps, supply shocks, marine cap, price history
   planning.py    material requirements, shortfalls, availability-aware re-formulation
   uncertainty.py Monte Carlo batch simulation, compliance rates, variance by ingredient
+  robust.py      chance-constrained formulation (CVXPY), reliability curve, fixed margin comparison
   charts.py      static charts
 scripts/run_all.py
 app/streamlit_app.py
@@ -223,7 +241,7 @@ outputs/       generated results
 - Multi-period planning: buy now or later given price forecasts and storage limits.
 - Several plants and recipes sharing the same constrained raw materials.
 - Pull prices automatically from the World Bank and IMF APIs each month.
-- Chance-constrained (stochastic) formulation: require each nutrient to be met in, say, 95% of batches and price that reliability. The batch simulation in section 10 of the summary already measures the problem.
+- Joint chance constraint (all requirements at once, not each separately) and correlated nutrients within an ingredient, using supplier-specific lot data instead of pooled Feedipedia spreads.
 
 ## License
 

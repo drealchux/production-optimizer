@@ -108,3 +108,41 @@ wheat,ile,0.2,196,Feedipedia node/12754 SD,sourced
 wheat,leu,0.3,197,Feedipedia node/12754 SD,sourced
 wheat,phe,0.2,190,Feedipedia node/12754 SD,sourced
 wheat,val,0.3,195,Feedipedia node/12754 SD,sourced
+wheat_gluten,dm,1.0,,Assumed SD for a typical commercial spec,assumed
+wheat_gluten,cp,1.5,,Assumed SD for a typical commercial spec,assumed
+wheat_gluten,fat,0.3,,Assumed SD for a typical commercial spec,assumed
+wheat_gluten,ash,0.3,,Assumed SD for a typical commercial spec,assumed
+wheat_gluten,fibre,0.2,,Assumed SD for a typical commercial spec,assumed
+wheat_gluten,starch,1.5,,Assumed SD for a typical commercial spec,assumed
+wheat_gluten,ge,0.5,,Assumed SD for a typical commercial spec,assumed
+wheat_gluten,p,0.4,,Assumed SD for a typical commercial spec,assumed
+wheat_gluten,lys,0.08,,Assumed SD: 5% of the amino acid value,assumed
+wheat_gluten,met,0.085,,Assumed SD: 5% of the amino acid value,assumed
+wheat_gluten,thr,0.13,,Assumed SD: 5% of the amino acid value,assumed
+wheat_gluten,trp,0.05,,Assumed SD: 5% of the amino acid value,assumed
+wheat_gluten,arg,0.18,,Assumed SD: 5% of the amino acid value,assumed
+wheat_gluten,his,0.105,,Assumed SD: 5% of the amino acid value,assumed
+wheat_gluten,ile,0.18,,Assumed SD: 5% of the amino acid value,assumed
+wheat_gluten,leu,0.34,,Assumed SD: 5% of the amino acid value,assumed
+wheat_gluten,phe,0.255,,Assumed SD: 5% of the amino acid value,assumed
+wheat_gluten,val,0.2,,Assumed SD: 5% of the amino acid value,assumed
+pea_protein_concentrate,dm,1.0,,Assumed SD for a typical commercial spec,assumed
+pea_protein_concentrate,cp,1.5,,Assumed SD for a typical commercial spec,assumed
+pea_protein_concentrate,fat,0.3,,Assumed SD for a typical commercial spec,assumed
+pea_protein_concentrate,ash,0.5,,Assumed SD for a typical commercial spec,assumed
+pea_protein_concentrate,fibre,0.5,,Assumed SD for a typical commercial spec,assumed
+pea_protein_concentrate,starch,1.5,,Assumed SD for a typical commercial spec,assumed
+pea_protein_concentrate,ge,0.5,,Assumed SD for a typical commercial spec,assumed
+pea_protein_concentrate,p,0.6,,Assumed SD for a typical commercial spec,assumed
+pea_protein_concentrate,lys,0.36,,Assumed SD: 5% of the amino acid value,assumed
+pea_protein_concentrate,met,0.05,,Assumed SD: 5% of the amino acid value,assumed
+pea_protein_concentrate,thr,0.185,,Assumed SD: 5% of the amino acid value,assumed
+pea_protein_concentrate,trp,0.045,,Assumed SD: 5% of the amino acid value,assumed
+pea_protein_concentrate,arg,0.425,,Assumed SD: 5% of the amino acid value,assumed
+pea_protein_concentrate,his,0.12,,Assumed SD: 5% of the amino acid value,assumed
+pea_protein_concentrate,ile,0.22,,Assumed SD: 5% of the amino acid value,assumed
+pea_protein_concentrate,leu,0.4,,Assumed SD: 5% of the amino acid value,assumed
+pea_protein_concentrate,phe,0.265,,Assumed SD: 5% of the amino acid value,assumed
+pea_protein_concentrate,val,0.24,,Assumed SD: 5% of the amino acid value,assumed
+algal_oil,epa_dha_pct_fat,2.0,,Assumed SD; supplier specs not public,assumed
+monocalcium_phosphate,p,3.0,,Assumed SD for feed-grade MCP (about 1% of the P content),assumed

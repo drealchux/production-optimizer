@@ -104,3 +104,33 @@ def test_binding_requirements_fail_about_half_of_batches(setup):
     contrib = variance_contribution(r.recipe, raw, var, ["epa_dha"], n=2000, seed=1)
     assert contrib["epa_dha"].sum() == pytest.approx(100)
     assert contrib["epa_dha"].idxmax() == "fish_oil"
+
+
+@pytest.fixture(scope="module")
+def chance_setup(setup):
+    from feedopt.robust import coefficient_sd
+    from feedopt.uncertainty import load_variability
+    nm, prices, req, limits = setup
+    raw, var = load_raw_ingredients(), load_variability()
+    return raw, var, coefficient_sd(raw, var, req, n=5000)
+
+
+def test_chance_at_50pct_equals_lp(setup, chance_setup):
+    from feedopt.robust import formulate_chance
+    nm, prices, req, limits = setup
+    lp = formulate(nm, prices, req, limits)
+    cc = formulate_chance(nm, prices, req, limits, chance_setup[2], alpha=0.5)
+    assert cc.cost_usd_per_t == pytest.approx(lp.cost_usd_per_t, rel=1e-5)
+
+
+def test_chance_cost_rises_and_reliability_holds(setup, chance_setup):
+    from feedopt.robust import formulate_chance, validate
+    nm, prices, req, limits = setup
+    raw, var, sd = chance_setup
+    c90 = formulate_chance(nm, prices, req, limits, sd, alpha=0.90)
+    c99 = formulate_chance(nm, prices, req, limits, sd, alpha=0.99)
+    assert c90.feasible and c99.feasible
+    assert c99.cost_usd_per_t > c90.cost_usd_per_t
+    assert c99.recipe.sum() == pytest.approx(100, abs=1e-6)
+    # every requirement should pass in close to 99% of simulated batches
+    assert validate(c99.recipe, raw, var, req, n=4000, seed=3)["weakest_pass_pct"] > 97.5

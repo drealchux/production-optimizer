@@ -22,6 +22,9 @@ from feedopt.planning import availability_aware_formulation, shortfall_report  #
 from feedopt.uncertainty import (  # noqa: E402
     batch_pass_rate, compliance_table, load_variability, simulate_profiles, variance_contribution,
 )
+from feedopt.robust import (  # noqa: E402
+    coefficient_sd, fixed_margin_formulation, formulate_chance, reliability_curve, validate,
+)
 from feedopt.scenarios import (  # noqa: E402
     category_summary, historical_cost, marine_cap, price_sweep, requirement_sweep, supply_shock,
 )
@@ -30,6 +33,7 @@ OUT = ROOT / "outputs"
 OUT.mkdir(exist_ok=True)
 PRODUCTION_T = 20_000  # illustrative monthly production for one plant
 N_BATCHES = 10_000  # simulated batches for the variability check
+ALPHAS = [0.5, 0.8, 0.9, 0.95, 0.99, 0.995, 0.999]  # per-requirement reliability targets
 
 
 def fmt_recipe(r) -> str:
@@ -187,6 +191,38 @@ def main():
               "batches to meet it (1.645 standard deviations).", "",
               "Share of each nutrient's variance caused by each ingredient (%):", "",
               contrib.T.round(1).to_markdown(), ""]
+
+    # 11. Chance-constrained formulation: price the reliability
+    sd = coefficient_sd(raw, var, req)
+    curve = reliability_curve(nm, prices, req, limits, sd, raw, var, ALPHAS, n_validate=N_BATCHES)
+    curve.to_csv(OUT / "reliability_curve.csv", index=False)
+    fm = fixed_margin_formulation(nm, prices, req, limits, raw, var, base.recipe, alpha=0.95, n=N_BATCHES)
+    fm_val = validate(fm.recipe, raw, var, req, N_BATCHES)
+    cc95 = curve.set_index("alpha_pct").loc[95.0]
+    charts.reliability_cost(curve, {"alpha_pct": 95.0, "cost": fm.cost_usd_per_t,
+                                    "all_pct": fm_val["all_requirements_pct"],
+                                    "weakest_pct": fm_val["weakest_pass_pct"]},
+                            OUT / "reliability_cost.png", "What reliability costs",
+                            "Least-cost recipe that meets each requirement in the target share of batches. "
+                            "Labels: cost and share of batches meeting all 21.")
+    used = [c for c in nm.index if c in curve and curve[c].max() > 0.05]
+    show_c = curve[["alpha_pct", "cost_usd_per_t", "all_requirements_pct", "weakest_requirement",
+                    "weakest_pass_pct"]].copy()
+    show_c["extra_vs_lp"] = (show_c["cost_usd_per_t"] - base.cost_usd_per_t).round(2) + 0.0  # no "-0"
+    lines += ["## 11. Chance-constrained formulation", "",
+              "Each requirement must hold in a target share of batches (alpha). With independent ingredient lots "
+              "this is a second-order cone constraint, solved with CVXPY and Clarabel. At alpha = 50% it is "
+              "exactly the LP. Every recipe is then re-checked by simulating "
+              f"{N_BATCHES:,} batches.", "",
+              show_c.round(2).to_markdown(index=False), "",
+              "Recipe at each target (% as fed):", "",
+              curve[["alpha_pct"] + used].round(1).to_markdown(index=False), "",
+              "Fixed margin shortcut (simulate the LP recipe once, move each requirement inward by 1.645 of its "
+              f"standard deviations, re-run the LP): **{fm.cost_usd_per_t:,.0f} USD/t**, "
+              f"{fm_val['all_requirements_pct']:.1f}% of batches meet everything, weakest requirement "
+              f"{fm_val['weakest_requirement']} at {fm_val['weakest_pass_pct']:.1f}% (target 95%). "
+              f"The chance-constrained recipe at 95% costs **{cc95['cost_usd_per_t']:,.0f} USD/t** and its "
+              f"weakest requirement passes {cc95['weakest_pass_pct']:.1f}%.", ""]
 
     (OUT / "summary.md").write_text("\n".join(lines))
     print("\n".join(lines))

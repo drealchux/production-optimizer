@@ -181,3 +181,36 @@ def batch_histograms(profiles: pd.DataFrame, compliance: pd.DataFrame, path: Pat
     fig.tight_layout(rect=(0, 0, 1, 1 - 0.95 / fig.get_figheight()))
     fig.savefig(path, dpi=160)
     plt.close(fig)
+
+
+def reliability_cost(curve: pd.DataFrame, fixed_margin: dict | None, path: Path, title: str, subtitle: str):
+    """Cost of the chance-constrained recipe against the per-requirement reliability target.
+
+    curve needs alpha_pct, cost_usd_per_t, all_requirements_pct. fixed_margin: {alpha_pct, cost, all_pct, weakest_pct}.
+    """
+    c = curve[curve["status"] == "optimal"].reset_index(drop=True)
+    pos = list(range(len(c)))
+    fig, ax = plt.subplots(figsize=(9, 5))
+    ax.plot(pos, c["cost_usd_per_t"], color=PALETTE[0], linewidth=2, marker="o", markersize=7,
+            markeredgecolor=SURFACE, markeredgewidth=2, label="Chance-constrained recipe", zorder=3)
+    for p, row in zip(pos, c.itertuples()):
+        ax.annotate(f"{row.cost_usd_per_t:,.0f}\n{row.all_requirements_pct:.0f}% all met",
+                    (p, row.cost_usd_per_t), textcoords="offset points", xytext=(0, 10), ha="center",
+                    fontsize=8, color=INK)
+    if fixed_margin is not None:
+        p = int(c.index[c["alpha_pct"] == fixed_margin["alpha_pct"]][0])
+        ax.plot([p + 0.12], [fixed_margin["cost"]], marker="D", markersize=7, color=PALETTE[1],
+                markeredgecolor=SURFACE, markeredgewidth=1.5, linestyle="none", zorder=3,
+                label=f"Fixed margin shortcut ({fixed_margin['all_pct']:.0f}% all met, "
+                      f"weakest {fixed_margin['weakest_pct']:.0f}%)")
+    _style(ax, title, subtitle)
+    ax.set_xticks(pos)
+    ax.set_xticklabels([f"{a:g}%" for a in c["alpha_pct"]])
+    ax.set_xlabel("Target: share of batches meeting each requirement", color=INK2, fontsize=9)
+    ax.set_ylabel("USD per tonne", color=INK2, fontsize=9)
+    lo, hi = c["cost_usd_per_t"].min(), c["cost_usd_per_t"].max()
+    ax.set_ylim(lo - 0.08 * (hi - lo), hi + 0.22 * (hi - lo))
+    ax.legend(frameon=False, fontsize=9, labelcolor=INK, loc="upper left")
+    fig.tight_layout()
+    fig.savefig(path, dpi=160)
+    plt.close(fig)
