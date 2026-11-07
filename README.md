@@ -199,14 +199,7 @@ python -m pytest -q
 
 The app opens at http://localhost:8501. Stop it with `Ctrl+C`.
 
-### Troubleshooting
 
-| Symptom | Cause and fix |
-|---|---|
-| `ModuleNotFoundError: No module named 'pulp'` (or `streamlit`) | You are using a Python that doesn't have the dependencies, usually the system one. Use `uv run ...` or activate `.venv` first. |
-| `python app/streamlit_app.py` prints warnings and no app opens | Streamlit apps must be started with `streamlit run`, not `python`. |
-| `run : The term 'run' is not recognized` | The command is `streamlit run`, not `run`. |
-| `File does not exist: app/streamlit_app.py` | You are inside `app/`. Go back to the project root, or run `streamlit run streamlit_app.py` from there. |
 
 ## Project structure
 
