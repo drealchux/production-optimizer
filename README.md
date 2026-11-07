@@ -70,12 +70,45 @@ Solved with PuLP and CBC, which also returns the duals (shadow prices) and reduc
 
 Every value is tagged **sourced**, **derived** or **assumed** in `data/raw/`. Details and links in [`data/SOURCES.md`](data/SOURCES.md).
 
-| Layer | Source |
-|---|---|
-| Ingredient composition | Feedipedia (INRAE, CIRAD, AFZ, FAO) for fish meal, fish oil, soybean meal, maize gluten meal, faba beans, wheat |
-| Salmon requirements | FAO AFFRIS Atlantic salmon Tables 2 and 9 |
-| Prices | World Bank Pink Sheet (May 2026) and IndexMundi (March 2026) |
-| Real-world benchmark | Aas et al. 2022, Nofima (Norway 2020 feed); Mowi Industry Handbook 2026; Skretting Protec profile from the aquacultuR R package |
+| Layer | Used in | Source |
+|---|---|---|
+| Ingredient composition | `ingredients_raw.csv` | Feedipedia (INRAE, CIRAD, AFZ, FAO) for fish meal, fish oil, soybean meal, maize gluten meal, faba beans, wheat |
+| Salmon requirements | `requirements.csv` | FAO AFFRIS Atlantic salmon Tables 2 and 9 |
+| Prices | `prices.csv`, `price_history.csv` | World Bank Pink Sheet (May 2026) and IndexMundi (March 2026) |
+| Real-world benchmark | `benchmarks.csv` | Aas et al. 2022, Nofima (Norway 2020 feed); Mowi Industry Handbook 2026; Skretting Protec profile from the aquacultuR R package; FAO AFFRIS Table 3 |
+
+### Links
+
+**Ingredient composition (Feedipedia)**
+
+- Fish meal, 70% protein: https://feedipedia.org/node/11685
+- Fish oil: https://www.feedipedia.org/node/12094
+- Soybean meal, 48% protein: https://www.feedipedia.org/node/26068
+- Maize gluten meal: https://www.feedipedia.org/node/12288
+- Faba bean seeds, low tannin: https://www.feedipedia.org/node/19701
+- Wheat grain: https://www.feedipedia.org/node/12754
+- EPA+DHA range for fish oil: Roque et al. 2026, Boletín IMARPE 41(1)
+
+**Salmon requirements (FAO AFFRIS)**
+
+- Table 2, nutrient requirements by life stage: https://www.fao.org/fileadmin/user_upload/affris/docs/Atlantic_Salmon/table_2.htm
+- Table 9, commercial feed specs by pellet size: https://www.fao.org/fileadmin/user_upload/affris/docs/Atlantic_Salmon/table_9.htm
+
+**Prices**
+
+- World Bank Commodity Price Data (Pink Sheet), May 2026: https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Pink-Sheet-May-2026.pdf
+- IndexMundi commodity prices (rapeseed oil, March 2026): https://www.indexmundi.com/commodities/
+- Fish oil: no free price series (IFFO prices are members only), so it is an assumption.
+
+**Benchmarks**
+
+- Aas, Åsgård and Ytrestøyl (2022), *Utilization of feed resources in the production of Atlantic salmon in Norway: an update for 2020*, Aquaculture Reports 26:101316: https://doi.org/10.1016/j.aqrep.2022.101316
+- Mowi Salmon Farming Industry Handbook 2026
+- aquacultuR R package, `feedcomp` dataset (Skretting Protec 4.5 mm): https://github.com/TellAnAx/aquacultuR
+
+**Possible upgrade**
+
+- USDA-ARS / USFWS Fish Ingredient Digestibility Database: https://www.ars.usda.gov/ARSUserFiles/20500500/fish/DigestibilityDatabaseV2016a.xlsx
 
 **Known gaps, stated plainly:**
 
