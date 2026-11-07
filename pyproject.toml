@@ -1,0 +1,14 @@
+[project]
+name = "salmon-feed-optimizer"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "matplotlib>=3.7",
+    "pandas>=2.0",
+    "pulp>=2.7,<3",
+    "pytest>=7",
+    "streamlit>=1.30",
+    "tabulate>=0.9",
+]

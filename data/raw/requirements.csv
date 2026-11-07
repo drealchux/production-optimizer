@@ -1,0 +1,43 @@
+profile,nutrient,bound,value,unit,source,note
+grower_1_2kg,crude_protein,min,40,% DM,FAO AFFRIS Atlantic salmon Table 2 (marine grower) and Table 9 (7 mm pellet),
+grower_1_2kg,crude_lipid,min,30,% DM,FAO AFFRIS Atlantic salmon Table 9 (7 mm pellet: 30 to 32%),
+grower_1_2kg,crude_lipid,max,35,% DM,Practical limit (assumed),Extrusion and oil coating capacity
+grower_1_2kg,digestible_energy,min,21,MJ/kg DM,FAO AFFRIS Atlantic salmon Table 9 (7 mm: 21 to 22 kJ/g),
+grower_1_2kg,dp_de_ratio,min,16.2,g DP/MJ DE,FAO AFFRIS Atlantic salmon Table 9 (7 mm: 16.2 to 17.5),
+grower_1_2kg,phosphorus,min,0.6,% DM,FAO AFFRIS Atlantic salmon Table 2 (marine grower),
+grower_1_2kg,epa_dha,min,1.0,% DM,FAO AFFRIS Atlantic salmon Table 2 (EPA 0.5% plus DHA 0.5%),
+grower_1_2kg,fibre,max,2,% DM,FAO AFFRIS Atlantic salmon Table 9,
+grower_1_2kg,ash,max,9,% DM,FAO AFFRIS Atlantic salmon Table 9,
+grower_1_2kg,starch,min,8,% DM,Practical limit (assumed),Starch is needed to bind extruded pellets
+grower_1_2kg,starch,max,17,% DM,FAO AFFRIS Atlantic salmon Table 9 (NFE 13 to 17%),
+grower_1_2kg,lys,min,1.8,% DM,FAO AFFRIS Atlantic salmon Table 2,Table header says % of protein but values match % of diet; treated as % of diet
+grower_1_2kg,met,min,1.0,% DM,FAO AFFRIS Atlantic salmon Table 2,Treated as % of diet
+grower_1_2kg,thr,min,0.8,% DM,FAO AFFRIS Atlantic salmon Table 2,Treated as % of diet
+grower_1_2kg,trp,min,0.2,% DM,FAO AFFRIS Atlantic salmon Table 2,Treated as % of diet
+grower_1_2kg,arg,min,1.6,% DM,FAO AFFRIS Atlantic salmon Table 2,Treated as % of diet
+grower_1_2kg,his,min,0.7,% DM,FAO AFFRIS Atlantic salmon Table 2,Treated as % of diet
+grower_1_2kg,ile,min,0.8,% DM,FAO AFFRIS Atlantic salmon Table 2,Treated as % of diet
+grower_1_2kg,leu,min,1.4,% DM,FAO AFFRIS Atlantic salmon Table 2,Treated as % of diet
+grower_1_2kg,phe,min,1.2,% DM,FAO AFFRIS Atlantic salmon Table 2,Treated as % of diet
+grower_1_2kg,val,min,1.3,% DM,FAO AFFRIS Atlantic salmon Table 2,Treated as % of diet
+smolt_100_250g,crude_protein,min,46,% DM,FAO AFFRIS Atlantic salmon Table 9 (4 mm pellet),
+smolt_100_250g,crude_lipid,min,26,% DM,FAO AFFRIS Atlantic salmon Table 9 (4 mm: 26 to 28%),
+smolt_100_250g,crude_lipid,max,32,% DM,Practical limit (assumed),
+smolt_100_250g,digestible_energy,min,19,MJ/kg DM,FAO AFFRIS Atlantic salmon Table 9 (4 mm: 19 to 20 kJ/g),
+smolt_100_250g,dp_de_ratio,min,20.4,g DP/MJ DE,FAO AFFRIS Atlantic salmon Table 9 (4 mm: 20.4 to 20.6),
+smolt_100_250g,phosphorus,min,0.6,% DM,FAO AFFRIS Atlantic salmon Table 2,
+smolt_100_250g,epa_dha,min,1.0,% DM,FAO AFFRIS Atlantic salmon Table 2,
+smolt_100_250g,fibre,max,2,% DM,FAO AFFRIS Atlantic salmon Table 9,
+smolt_100_250g,ash,max,11,% DM,FAO AFFRIS Atlantic salmon Table 9,
+smolt_100_250g,starch,min,8,% DM,Practical limit (assumed),
+smolt_100_250g,starch,max,15,% DM,FAO AFFRIS Atlantic salmon Table 9 (NFE 12 to 15%),
+smolt_100_250g,lys,min,1.8,% DM,FAO AFFRIS Atlantic salmon Table 2,Treated as % of diet
+smolt_100_250g,met,min,1.0,% DM,FAO AFFRIS Atlantic salmon Table 2,Treated as % of diet
+smolt_100_250g,thr,min,0.8,% DM,FAO AFFRIS Atlantic salmon Table 2,Treated as % of diet
+smolt_100_250g,trp,min,0.2,% DM,FAO AFFRIS Atlantic salmon Table 2,Treated as % of diet
+smolt_100_250g,arg,min,1.6,% DM,FAO AFFRIS Atlantic salmon Table 2,Treated as % of diet
+smolt_100_250g,his,min,0.7,% DM,FAO AFFRIS Atlantic salmon Table 2,Treated as % of diet
+smolt_100_250g,ile,min,0.8,% DM,FAO AFFRIS Atlantic salmon Table 2,Treated as % of diet
+smolt_100_250g,leu,min,1.4,% DM,FAO AFFRIS Atlantic salmon Table 2,Treated as % of diet
+smolt_100_250g,phe,min,1.2,% DM,FAO AFFRIS Atlantic salmon Table 2,Treated as % of diet
+smolt_100_250g,val,min,1.3,% DM,FAO AFFRIS Atlantic salmon Table 2,Treated as % of diet

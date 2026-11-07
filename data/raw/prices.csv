@@ -1,0 +1,16 @@
+ingredient,price_usd_per_t,basis,price_source,price_status
+fish_meal,1837,March 2026 monthly average,World Bank Pink Sheet May 2026 (Fish meal 64% protein FOB Bremen),sourced
+fish_oil,3500,Assumption,No free fish oil price series exists (IFFO data is members only); set as assumption and stress-tested in scenarios,assumed
+soy_protein_concentrate,1010,2.5 x soybean meal price,Premium over World Bank soybean meal (404 USD/t March 2026),derived
+soybean_meal,404,March 2026 monthly average,World Bank Pink Sheet May 2026 (Soybean meal),sourced
+maize_gluten_meal,640,3.0 x maize price,Premium over World Bank maize (212.7 USD/t March 2026),derived
+wheat_gluten,1800,Assumption,No free wheat gluten price series; typical traded level assumed,assumed
+pea_protein_concentrate,1400,Assumption,No free pea protein concentrate price series; assumed,assumed
+faba_bean_dehulled,350,1.4 x wheat price,Premium over World Bank US SRW wheat (247.4 USD/t March 2026) for dehulling,derived
+wheat,247,March 2026 monthly average,World Bank Pink Sheet May 2026 (Wheat US SRW),sourced
+rapeseed_oil,1304,March 2026 monthly average,IndexMundi commodity snapshot March 2026 (Rapeseed oil),sourced
+algal_oil,12000,Assumption,No public price; assumed premium EPA+DHA source,assumed
+monocalcium_phosphate,750,Assumption,Near World Bank/IndexMundi TSP (558) and DAP (658) fertilizer phosphate prices March 2026 plus feed-grade premium,derived
+l_lysine_hcl,1800,Assumption,Typical feed-grade amino acid price assumed,assumed
+dl_methionine,3500,Assumption,Typical feed-grade amino acid price assumed,assumed
+premix,3000,Assumption,Typical vitamin and mineral premix price assumed,assumed

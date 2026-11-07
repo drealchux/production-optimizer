@@ -1,0 +1,10 @@
+ingredient,min_pct,max_pct,reason
+soybean_meal,0,5,Higher levels cause soybean meal induced enteritis in Atlantic salmon (practical limit assumed)
+faba_bean_dehulled,0,10,Antinutrients and starch (practical limit assumed)
+maize_gluten_meal,0,12,Pigment and palatability (practical limit assumed)
+wheat_gluten,0,15,Pellet texture (practical limit assumed)
+pea_protein_concentrate,0,15,Antinutrients (practical limit assumed)
+l_lysine_hcl,0,0.5,Crystalline amino acid ceiling (assumed)
+dl_methionine,0,0.3,Crystalline amino acid ceiling (assumed)
+monocalcium_phosphate,0,3,Mineral ceiling (assumed)
+premix,2,2,Fixed vitamin and mineral premix (assumed)

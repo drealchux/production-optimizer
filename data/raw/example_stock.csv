@@ -1,0 +1,9 @@
+ingredient,stock_t,inbound_t,note
+fish_meal,1500,1000,Illustrative numbers for the planning demo (not real Skretting data)
+fish_oil,250,0,Illustrative: a fish oil vessel is delayed so nothing arrives this month
+soy_protein_concentrate,4000,3000,Illustrative
+soybean_meal,800,500,Illustrative
+maize_gluten_meal,1500,1200,Illustrative
+wheat,2000,1500,Illustrative
+rapeseed_oil,3000,2500,Illustrative
+algal_oil,200,0,Illustrative

@@ -1,0 +1,28 @@
+benchmark,metric,value,unit,source
+norway_2020,fish_meal,12,% of ingredients,Aas et al. 2022 Aquaculture Reports 26:101316 (Nofima; 2020 Norwegian salmon feed)
+norway_2020,fish_oil,10,% of ingredients,Aas et al. 2022
+norway_2020,plant_protein,41,% of ingredients,Aas et al. 2022
+norway_2020,vegetable_oil,20,% of ingredients,Aas et al. 2022
+norway_2020,carbohydrate,13,% of ingredients,Aas et al. 2022
+norway_2020,micro,4,% of ingredients,Aas et al. 2022
+norway_2020,novel,0.4,% of ingredients,Aas et al. 2022
+mowi_2025,fish_meal,16,% of feed,Mowi Salmon Farming Industry Handbook 2026
+mowi_2025,fish_oil,11,% of feed,Mowi Salmon Farming Industry Handbook 2026
+norway_1990,fish_meal,65,% of feed,Mowi Salmon Farming Industry Handbook 2026
+norway_1990,fish_oil,24,% of feed,Mowi Salmon Farming Industry Handbook 2026
+skretting_protec_4_5mm,dry_matter,93,% as fed,aquacultuR R package feedcomp dataset (Skretting Protec 4.5 mm)
+skretting_protec_4_5mm,crude_protein,47.42,% as fed,aquacultuR feedcomp
+skretting_protec_4_5mm,crude_lipid,22,% as fed,aquacultuR feedcomp
+skretting_protec_4_5mm,ash,8,% as fed,aquacultuR feedcomp
+skretting_protec_4_5mm,gross_energy,22.1,MJ/kg as fed,aquacultuR feedcomp
+skretting_protec_4_5mm,phosphorus,1.2,% as fed,aquacultuR feedcomp
+skretting_protec_4_5mm,lys,2.73,% as fed,aquacultuR feedcomp
+skretting_protec_4_5mm,met,1.07,% as fed,aquacultuR feedcomp
+skretting_protec_4_5mm,thr,1.76,% as fed,aquacultuR feedcomp
+skretting_protec_4_5mm,arg,3.3,% as fed,aquacultuR feedcomp
+fao_marine_grower,fish_meal,28.8,% DM,FAO AFFRIS Atlantic salmon Table 3
+fao_marine_grower,fish_oil,25.8,% DM,FAO AFFRIS Atlantic salmon Table 3
+fao_marine_grower,plant_protein,20,% DM,FAO AFFRIS Atlantic salmon Table 3 (corn gluten 8 + soybean meal 12)
+fao_marine_grower,carbohydrate,7.4,% DM,FAO AFFRIS Atlantic salmon Table 3 (ground wheat)
+fao_marine_grower,crude_protein,44,% DM,FAO AFFRIS Atlantic salmon Table 3
+fao_marine_grower,crude_lipid,30,% DM,FAO AFFRIS Atlantic salmon Table 3

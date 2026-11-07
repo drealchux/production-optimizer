@@ -1,0 +1,8 @@
+,required_t,available_t,balance_t,status
+fish_oil,593.3,250.0,-343.3,SHORT
+maize_gluten_meal,2400.0,2700.0,300.0,ok
+soybean_meal,1000.0,1300.0,300.0,ok
+fish_meal,1946.8,2500.0,553.2,ok
+wheat,2720.9,3500.0,779.1,ok
+rapeseed_oil,4676.0,5500.0,824.0,ok
+soy_protein_concentrate,6112.9,7000.0,887.1,ok

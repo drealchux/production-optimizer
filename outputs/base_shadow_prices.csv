@@ -1,0 +1,10 @@
+constraint,nutrient,bound,requirement,usd_per_t_per_unit
+fibre_max,fibre,max,2.0,99.85744213584631
+epa_dha_min,epa_dha,min,1.0,82.2348543664176
+limit_premix_min,limit_premix_min,min,,28.190282000000003
+met_min,met,min,1.0,21.393884324294447
+crude_protein_min,crude_protein,min,40.0,17.55968620138255
+crude_lipid_min,crude_lipid,min,30.0,10.977267766458752
+limit_maize_gluten_meal_max,limit_maize_gluten_meal_max,max,,6.8066061
+limit_soybean_meal_max,limit_soybean_meal_max,max,,1.1222327
+limit_l_lysine_hcl_max,limit_l_lysine_hcl_max,max,,1.0744439
